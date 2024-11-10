@@ -19,9 +19,10 @@ colisRouteur.get(
 );
 
 const colisLivRouteur = express();
+const colisCommandeRouteur = express();
 
 colisLivRouteur.get(
-  "/get-colis/:IdLivraison",
+  "/get-colis/Liv/:IdLivraison",
   async (req: Request, res: Response) => {
     const idLivraison = req.params.IdLivraison;
     try {
@@ -31,6 +32,23 @@ colisLivRouteur.get(
       );
       console.log(idLivraison);
       res.json(colisLivraison);
+    } catch (error) {
+      console.error("Erreur :", error);
+      res.status(500).json({ error: "Erreur serveur" });
+    }
+  }
+);
+colisCommandeRouteur.get(
+  "/get-colis/Com/:IdCommande",
+  async (req: Request, res: Response) => {
+    const idCommande = req.params.IdCommande;
+    try {
+      const colisCommande = await query(
+        `SELECT colis.NumColis, colis.ContactColis, colis.AdresseColis, colis.DateLivColis, PoidColis, colis.IdLivraison, colis.IdCommande, commandes.IdCommande FROM colis JOIN commandes ON colis.IdCommande = commandes.IdCommande WHERE commandes.IdCommande = ?`,
+        [idCommande]
+      );
+      console.log(idCommande);
+      res.json(colisCommande);
     } catch (error) {
       console.error("Erreur :", error);
       res.status(500).json({ error: "Erreur serveur" });
@@ -52,4 +70,4 @@ colisRouteur.post("/ajoutColis", async (req: Request, res: Response) => {
     res.status(500).json({ message: "Erreur de serveur." });
   }
 });
-export { colisLivRouteur, colisRouteur };
+export { colisLivRouteur, colisRouteur, colisCommandeRouteur };

@@ -3,6 +3,7 @@ import express, { Request, Response } from "express";
 import authMiddleware, { CustomRequest } from "../middlewares/authMiddleware";
 
 const commandeRouteur = express();
+const CommandeClientRouteur = express();
 
 commandeRouteur.get("/get-commandes",authMiddleware,async (req:CustomRequest, res:Response)=>{
     try {
@@ -14,4 +15,17 @@ commandeRouteur.get("/get-commandes",authMiddleware,async (req:CustomRequest, re
     }
   });
 
-export default commandeRouteur;
+  CommandeClientRouteur.get("/get-commandes/:IdClient",authMiddleware, async (req:CustomRequest, res:Response)=>{
+    const idClient = req.params.IdClient;
+    try {
+      const commandesClient =await query("SELECT Commandes.IdCommande, Clients.NomClient FROM Commandes JOIN Clients ON Commandes.IdClient = Clients.IdClient WHERE Commandes.IdClient = ?",[idClient]
+      );
+      console.log(idClient);
+      res.json(commandesClient);
+    } catch (error) {
+      console.error("Erreur :", error);
+      res.status(500).json({ error: "Erreur serveur" });
+    }
+  })
+
+export {commandeRouteur , CommandeClientRouteur};

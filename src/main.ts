@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
 import clientRouteur from "../routes/clientRouteur";
-import { colisRouteur, colisLivRouteur } from "../routes/colisRouteur";
-import commandeRouteur from "../routes/commandeRouteur";
+import { colisRouteur, colisLivRouteur, colisCommandeRouteur } from "../routes/colisRouteur";
+import {commandeRouteur , CommandeClientRouteur} from "../routes/commandeRouteur";
 import {
   livraisonRouteur,
   livraisonTourneeRouteur,
@@ -24,9 +24,11 @@ server.listen(3000, () => console.log("Serveur prêt à démarrer"));
 server.use("/admin", authMiddleware, roleMiddleware(1), clientRouteur);
 server.use("/admin", authMiddleware, roleMiddleware(1), colisRouteur);
 server.use("/admin", authMiddleware, roleMiddleware(1), commandeRouteur);
+server.use("/admin", authMiddleware, roleMiddleware(1), CommandeClientRouteur);
 server.use("/admin", authMiddleware, roleMiddleware(1), livraisonRouteur);
 server.use("/admin", authMiddleware, roleMiddleware(1), tourneeRouteur);
 server.use("/admin", authMiddleware, roleMiddleware(1), colisLivRouteur);
+server.use("/admin", authMiddleware, roleMiddleware(1), colisCommandeRouteur);
 server.use("/admin", authMiddleware, roleMiddleware(1), livraisonTourneeRouteur);
 server.use("/admin", authMiddleware, roleMiddleware(1), livreurRouteur);
 server.use("/livreur", authMiddleware, signatureRouteur);
