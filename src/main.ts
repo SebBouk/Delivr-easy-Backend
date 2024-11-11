@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
 import clientRouteur from "../routes/clientRouteur";
 import { colisRouteur, colisLivRouteur, colisCommandeRouteur } from "../routes/colisRouteur";
-import {commandeRouteur , CommandeClientRouteur} from "../routes/commandeRouteur";
+import {commandeRouteur , CommandeClientRouteur, AddCommandeRouteur} from "../routes/commandeRouteur";
 import {
   livraisonRouteur,
   livraisonTourneeRouteur,
@@ -31,6 +31,7 @@ server.use("/admin", authMiddleware, roleMiddleware(1), colisLivRouteur);
 server.use("/admin", authMiddleware, roleMiddleware(1), colisCommandeRouteur);
 server.use("/admin", authMiddleware, roleMiddleware(1), livraisonTourneeRouteur);
 server.use("/admin", authMiddleware, roleMiddleware(1), livreurRouteur);
+server.use("/admin", authMiddleware, roleMiddleware(1), AddCommandeRouteur);
 server.use("/livreur", authMiddleware, signatureRouteur);
 server.use("/", LoginRouteur);
 server.use("/livreur", authMiddleware, roleMiddleware(0), livraisonRouteur);

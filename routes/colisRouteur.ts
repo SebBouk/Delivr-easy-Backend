@@ -60,7 +60,7 @@ colisRouteur.post("/ajoutColis", async (req: Request, res: Response) => {
 
   try {
      await query(
-      "INSERT INTO colis ( AdresseColis, ContactColis, PoidColis, DateLivColis) VALUES ( ?, ?, ?, ?)",
+      "INSERT INTO colis ( AdresseColis, ContactColis, PoidColis, DateLivColis, IdCommanse) VALUES ( ?, ?, ?, ?) ",
       [AdresseColis, ContactColis, PoidColis, DateLivColis]
     );
 

@@ -4,6 +4,7 @@ import authMiddleware, { CustomRequest } from "../middlewares/authMiddleware";
 
 const commandeRouteur = express();
 const CommandeClientRouteur = express();
+const AddCommandeRouteur = express();
 
 commandeRouteur.get("/get-commandes",authMiddleware,async (req:CustomRequest, res:Response)=>{
     try {
@@ -28,4 +29,17 @@ commandeRouteur.get("/get-commandes",authMiddleware,async (req:CustomRequest, re
     }
   })
 
-export {commandeRouteur , CommandeClientRouteur};
+  AddCommandeRouteur.post("/ajoutCommande", async (req, res)=>{
+    const { IdClient } = req.body;
+  try {
+    await query(
+      "INSERT INTO commandes (IdClient) VALUES (?)",
+      [IdClient]
+    );
+    res.status(201).json({ message: "Commande ajouté avec succès" });
+  } catch (error) {
+    res.status(500).json({ error: "Erreur lors de l'ajout de la commande" });
+  }
+});
+
+export {commandeRouteur , CommandeClientRouteur, AddCommandeRouteur};
