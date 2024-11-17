@@ -55,19 +55,44 @@ colisCommandeRouteur.get(
     }
   }
 );
-colisRouteur.post("/ajoutColis", async (req: Request, res: Response) => {
-  const { AdresseColis, ContactColis, PoidColis, DateLivColis } = req.body;
+colisRouteur.post("/ajoutColis/:IdCommande", async (req: Request, res: Response) => {
+  const IdCommande =req.params.IdCommande;
+  const { AdresseColis, ContactColis, PoidColis, DateLivColis} = req.body;
 
   try {
      await query(
-      "INSERT INTO colis ( AdresseColis, ContactColis, PoidColis, DateLivColis, IdCommanse) VALUES ( ?, ?, ?, ?) ",
-      [AdresseColis, ContactColis, PoidColis, DateLivColis]
+      "INSERT INTO colis ( AdresseColis, ContactColis, PoidColis, DateLivColis, IdCommande) VALUES ( ?, ?, ?, ?, ?) ",
+      [AdresseColis, ContactColis, PoidColis, DateLivColis, IdCommande]
     );
 
     res.status(201).json({ message: "Colis ajouté avec succès." });
   } catch (error) {
     console.error("Erreur lors de l’ajout du colis :", error);
     res.status(500).json({ message: "Erreur de serveur." });
+  }
+});
+
+colisLivRouteur.post('/assign-colis-to-livraison', async (req: Request, res: Response) => {
+  const { IdColis, IdLivraison } = req.body;
+
+  if (!IdColis || !IdLivraison) {
+    return res.status(400).json({ error: 'IdColis et IdLivraison sont requis' });
+  }
+
+  try {
+    const result = await query(
+      'UPDATE colis SET IdLivraison = ? WHERE NumColis = ?',
+      [IdLivraison, IdColis]
+    );
+
+    if (result[0].affectedRows > 0) {
+      res.status(200).json({ message: 'Colis assigné avec succès à la livraison.' });
+    } else {
+      res.status(404).json({ error: 'Colis non trouvé ou erreur dans l\'assignation.' });
+    }
+  } catch (error) {
+    console.error('Erreur lors de l\'assignation du colis :', error);
+    res.status(500).json({ error: 'Erreur serveur' });
   }
 });
 export { colisLivRouteur, colisRouteur, colisCommandeRouteur };
