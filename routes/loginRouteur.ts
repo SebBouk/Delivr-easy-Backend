@@ -26,13 +26,14 @@ LoginRouteur.post("/login", async (req: CustomRequest, res: Response) => {
     {
         IdEmploye : employe.IdEmploye,
         MailEmploye:employe.MailEmploye,
-        RoleEmploye: employe.RoleEmploye
+        RoleEmploye: employe.RoleEmploye,
+        NomEmploye : employe.NomEmploye
     },
     process.env.JWT_SECRET as string,
     { expiresIn: '1h'}
   );
   res.cookie('token',token,{httpOnly: false});
-  res.status(200).json({message:'Connexion réussie', token, IdEmploye : employe.IdEmploye, RoleEmploye: employe.RoleEmploye});
+  res.status(200).json({message:'Connexion réussie', token, IdEmploye : employe.IdEmploye, RoleEmploye: employe.RoleEmploye, NomEmploye : employe.NomEmploye});
       
     } catch (error) {
       console.error("Erreur lors de l'authentification :", error);
