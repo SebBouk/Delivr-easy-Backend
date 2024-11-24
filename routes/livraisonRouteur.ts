@@ -6,7 +6,7 @@ const livraisonRouteur = express();
 
 livraisonRouteur.get("/get-livraison",authMiddleware, async (req: CustomRequest, res: Response) => {
   try {
-    const livraison = await query("SELECT * FROM livraisons");
+    const livraison = await query("SELECT livraisons.IdLivraison,COUNT(colis.NumColis) AS NombreColis FROM livraisons LEFT JOIN colis ON colis.IdLivraison = livraisons.IdLivraison GROUP BY livraisons.IdLivraison");
     res.status(200).json(livraison);
   } catch (error) {
     console.error("Erreur :", error);
@@ -22,7 +22,7 @@ livraisonTourneeRouteur.get(
     const idTournee = req.params.IdTournee;
     try {
       const livraisonTournee = await query(
-        "SELECT livraisons.IdLivraison, livraisons.LivraisonEnCour, livraisons.LivraisonArrive, tournées.IdTournee FROM livraisons JOIN tournées ON livraisons.IdTournee = tournées.IdTournee WHERE tournées.IdTournee = ?",
+        "SELECT livraisons.IdLivraison, livraisons.LivraisonEnCour, livraisons.LivraisonArrive, tournées.IdTournee, COUNT(colis.NumColis) AS NombreColis FROM livraisons JOIN tournées ON livraisons.IdTournee = tournées.IdTournee LEFT JOIN colis ON colis.IdLivraison = livraisons.IdLivraison WHERE tournées.IdTournee = ? GROUP BY livraisons.IdLivraison, livraisons.LivraisonEnCour, livraisons.LivraisonArrive, tournées.IdTournee",
         [idTournee]
       );
       console.log(idTournee);
