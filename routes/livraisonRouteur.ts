@@ -42,11 +42,16 @@ livraisonRouteur.post('/create-livraison', async (req, res) => {
   }
 
   try {
-    const [result] = await query(
+    // Correction : récupère l'objet de résultat directement
+    const result = await query(
       'INSERT INTO Livraisons (IdTournee) VALUES (?)',
       [IdTournee]
     );
-    res.status(201).json({ IdLivraison: result.insertId });
+
+    const insertId = result[0]?.insertId;
+
+    // Envoie l'ID de la livraison insérée
+    res.status(201).json({ IdLivraison:insertId });
   } catch (error) {
     console.error('Erreur lors de la création de la livraison :', error);
     res.status(500).send('Erreur serveur');

@@ -84,12 +84,7 @@ colisLivRouteur.post('/assign-colis-to-livraison', async (req: Request, res: Res
       'UPDATE colis SET IdLivraison = ? WHERE NumColis = ?',
       [IdLivraison, IdColis]
     );
-
-    if (result[0].affectedRows > 0) {
       res.status(200).json({ message: 'Colis assigné avec succès à la livraison.' });
-    } else {
-      res.status(404).json({ error: 'Colis non trouvé ou erreur dans l\'assignation.' });
-    }
   } catch (error) {
     console.error('Erreur lors de l\'assignation du colis :', error);
     res.status(500).json({ error: 'Erreur serveur' });

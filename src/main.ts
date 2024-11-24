@@ -14,6 +14,7 @@ import authMiddleware from "../middlewares/authMiddleware";
 import { roleMiddleware } from "../middlewares/roleMiddleware"; 
 import cookieParser from "cookie-parser";
 import livreur2Router from "../routes/livreurColis";
+import employeRouteur from "../routes/employeRouteur";
 
 const server = express();
 server.use(express.json());
@@ -32,6 +33,8 @@ server.use("/admin", authMiddleware, roleMiddleware(1), colisCommandeRouteur);
 server.use("/admin", authMiddleware, roleMiddleware(1), livraisonTourneeRouteur);
 server.use("/admin", authMiddleware, roleMiddleware(1), livreurRouteur);
 server.use("/admin", authMiddleware, roleMiddleware(1), AddCommandeRouteur);
+server.use("/admin", authMiddleware, roleMiddleware(1), employeRouteur);
+
 server.use("/livreur", authMiddleware, signatureRouteur);
 server.use("/", LoginRouteur);
 server.use("/livreur", authMiddleware, roleMiddleware(0), livraisonRouteur);
