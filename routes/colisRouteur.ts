@@ -27,7 +27,7 @@ colisLivRouteur.get(
     const idLivraison = req.params.IdLivraison;
     try {
       const colisLivraison = await query(
-        `SELECT colis.NumColis, colis.ContactColis, colis.AdresseColis, colis.DateLivColis, PoidColis, colis.IdLivraison, colis.IdCommande, livraisons.IdTournee FROM colis JOIN livraisons ON colis.IdLivraison = livraisons.IdLivraison WHERE livraisons.IdLivraison = ?`,
+        `SELECT colis.NumColis, colis.ContactColis, colis.AdresseColis, colis.DateLivColis, PoidColis, colis.IdLivraison, colis.IdCommande, colis.Commentaire, livraisons.IdTournee FROM colis JOIN livraisons ON colis.IdLivraison = livraisons.IdLivraison WHERE livraisons.IdLivraison = ?`,
         [idLivraison]
       );
       console.log(idLivraison);
@@ -44,7 +44,7 @@ colisCommandeRouteur.get(
     const idCommande = req.params.IdCommande;
     try {
       const colisCommande = await query(
-        `SELECT colis.NumColis, colis.ContactColis, colis.AdresseColis, colis.DateLivColis, PoidColis, colis.IdLivraison, colis.IdCommande, commandes.IdCommande FROM colis JOIN commandes ON colis.IdCommande = commandes.IdCommande WHERE commandes.IdCommande = ?`,
+        `SELECT colis.NumColis, colis.ContactColis, colis.AdresseColis, colis.DateLivColis, PoidColis, colis.IdLivraison, colis.IdCommande, colis.Commentaire, commandes.IdCommande FROM colis JOIN commandes ON colis.IdCommande = commandes.IdCommande WHERE commandes.IdCommande = ?`,
         [idCommande]
       );
       console.log(idCommande);
@@ -88,6 +88,23 @@ colisLivRouteur.post('/assign-colis-to-livraison', async (req: Request, res: Res
   } catch (error) {
     console.error('Erreur lors de l\'assignation du colis :', error);
     res.status(500).json({ error: 'Erreur serveur' });
+  }
+});
+
+colisRouteur.post('/colis/commentaire', async (req, res) => {
+  const { commentaire , IdColis} = req.body;
+
+  if (!commentaire) {
+    return res.status(400).json({ message: 'Le commentaire est requis.' });
+  }
+
+  try {
+    // Exemple de requête SQL pour mettre à jour le commentaire
+    await query('UPDATE colis SET Commentaire = ? WHERE NumColis = ?', [commentaire, IdColis]);
+    res.status(200).json({ message: 'Commentaire ajouté avec succès.' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Erreur lors de la mise à jour du commentaire.' });
   }
 });
 export { colisLivRouteur, colisRouteur, colisCommandeRouteur };
